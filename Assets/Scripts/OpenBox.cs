@@ -5,7 +5,8 @@ using LitJson;
 using System;
 
 public class OpenBox : MonoBehaviour {
-    
+    public GameManager gm;
+
     public void onOpenClick()
     {
         Debug.Log("onopenclick");
@@ -16,14 +17,18 @@ public class OpenBox : MonoBehaviour {
         long val = gi.getRandom();
         Debug.Log("val: " + val);
 
+        GiftItem rightItem = new GiftItem();
         for (int i = 0; i < GameManager.giftList.Count; i++)
         {
             GiftItem item = (GiftItem)GameManager.giftList[i];
             if (val >= item.rangeStart && val <= item.rangeEnd)
             {
                 Debug.Log(item.text + " 당첨!");
+                rightItem = item;
                 break;
             }
         }
+
+        gm.SetGiftResult(rightItem);
     }
 }

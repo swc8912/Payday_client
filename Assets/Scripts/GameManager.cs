@@ -16,7 +16,12 @@ public class GameManager : MonoBehaviour {
 
     public Button nextBtn;
     public Button msgBtn;
+    public Button upgradeBtn;
+    public Button settingBtn;
     public Text msgText;
+    public GameObject giftBox;
+
+    public MsgBox msgBox;
 
 	// Use this for initialization
 	void Start () {
@@ -32,19 +37,32 @@ public class GameManager : MonoBehaviour {
     public void InitScene()
     {
         // 대화창 안보이게
+        // 상자 이미지 보이게
         // 상자 열기 버튼 보이게
         // 직급 돈 보이게
         // 설정 강화 버튼 보이게
         // 하트 보이게
         Debug.Log("initscene");
-        if (msgBtn != null)
-            msgBtn.gameObject.SetActive(false);
-        if(msgText!=null)
-            msgText.text = "";
-        if (nextBtn != null)
-            nextBtn.gameObject.SetActive(true);
+        msgBtn.gameObject.SetActive(false);
+        msgText.text = "";
+        nextBtn.gameObject.SetActive(true);
+        giftBox.gameObject.SetActive(true);
+        //upgradeBtn.gameObject.SetActive(true);
+        //settingBtn.gameObject.SetActive(true);
+    }
 
-
+    public void SetGiftResult(GiftItem item)
+    {
+        // 뽑기 버튼 숨기기
+        // 선물 상자 이미지 숨기기
+        // 대화상자 다시 나타내고 당첨 결과 출력
+        nextBtn.gameObject.SetActive(false);
+        msgBtn.gameObject.SetActive(true);
+        //upgradeBtn.gameObject.SetActive(false);
+        //settingBtn.gameObject.SetActive(false);
+        string script = "월급상자에서 " + item.text + " 이(가) 나왔다!";
+        msgBox.PrintScript(script);
+        giftBox.gameObject.SetActive(false);
     }
 
     public void LoadData()

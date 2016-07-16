@@ -12,6 +12,8 @@ public class MsgBox : MonoBehaviour {
     private int line;
     private int textCnt = 0;
     private int maxTextCnt;
+    private string memoryScript;
+
     public Button nextBtn;
     public GameManager gm;
 
@@ -45,6 +47,15 @@ public class MsgBox : MonoBehaviour {
     {
         if (standby)
             StartCoroutine("printScript");
+    }
+
+    public void PrintScript(string script)
+    {
+        if (standby)
+        {
+            memoryScript = script;
+            StartCoroutine("printScript2");
+        }
     }
 
     IEnumerator printScript()
@@ -85,5 +96,24 @@ public class MsgBox : MonoBehaviour {
         }
         //Debug.Log("division sct script: " + script);
         return sct;
+    }
+
+    IEnumerator printScript2()
+    {
+        Debug.Log("printScript2");
+        standby = false;
+
+        int cnt = 0;
+        char[] c = memoryScript.ToCharArray();
+        //Debug.Log("c len: " + c.Length);
+        textCnt += c.Length;
+        for (cnt = 0; cnt < c.Length; cnt++)
+        {
+            textContents.text += c[cnt].ToString();
+            //Debug.Log("text: " + textContents.text);
+            yield return new WaitForSeconds(sec);
+            //yield return null;
+        }
+        standby = true;
     }
 }
