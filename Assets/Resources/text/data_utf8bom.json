@@ -1,0 +1,52 @@
+{
+    "data" : [
+        {
+            "description" : "4만원이다.",
+            "index" : 10001,
+            "rangeStart" : 1,
+            "rangeEnd" : 4000,
+            "text" : "4만원",
+			"type" : 1
+        },
+        {
+            "description" : "20만원이다.",
+            "index" : 10002,
+            "rangeStart" : 4001,
+            "rangeEnd" : 6000,
+            "text" : "20만원",
+			"type" : 1
+        },
+        {
+            "description" : "100만원이다..",
+            "index" : 10003,
+            "rangeStart" : 6001,
+            "rangeEnd" : 7000,
+            "text" : "100만원",
+			"type" : 1
+        },
+        {
+            "description" : "500만원이다..",
+            "index" : 10004,
+            "rangeStart" : 7001,
+            "rangeEnd" : 8000,
+            "text" : "500만원",
+			"type" : 1
+        },
+        {
+            "description" : "BMW 100일 이용권이다.",
+            "index" : 10005,
+            "rangeStart" : 8001,
+            "rangeEnd" : 9000,
+            "text" : "BMW(100일)",
+			"type" : 2
+        },
+        {
+            "description" : "눈치보지않고 쓸수있는 연차사용권이다.",
+            "index" : 10006,
+            "rangeStart" : 9001,
+            "rangeEnd" : 10000,
+            "text" : "1일연차사용권",
+			"type" : 2
+        }
+    ]
+}

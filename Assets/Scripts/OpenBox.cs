@@ -1,0 +1,29 @@
+﻿using UnityEngine;
+using System.Collections;
+using UnityEngine.UI;
+using LitJson;
+using System;
+
+public class OpenBox : MonoBehaviour {
+    
+    public void onOpenClick()
+    {
+        Debug.Log("onopenclick");
+        // 랜덤 계산해서 아이템 정함
+        // 선물상자 없어지고 해당 아이템 이미지 나옴
+        // 대화상자 나와서 ~~를 획득하였다고 나옴
+        GetItems gi = new GetItems();
+        long val = gi.getRandom();
+        Debug.Log("val: " + val);
+
+        for (int i = 0; i < GameManager.giftList.Count; i++)
+        {
+            GiftItem item = (GiftItem)GameManager.giftList[i];
+            if (val >= item.rangeStart && val <= item.rangeEnd)
+            {
+                Debug.Log(item.text + " 당첨!");
+                break;
+            }
+        }
+    }
+}
