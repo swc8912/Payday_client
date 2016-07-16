@@ -63,6 +63,9 @@ public class GameManager : MonoBehaviour {
         string script = "월급상자에서 " + item.text + " 이(가) 나왔다!";
         msgBox.PrintScript(script);
         giftBox.gameObject.SetActive(false);
+
+        // 뽑은 내용 json으로 만들어서 로그 전송
+
     }
 
     public void LoadData()

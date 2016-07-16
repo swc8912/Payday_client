@@ -5,8 +5,7 @@ using System.Text;
 using System.IO;
 using System.Net;
 
-public class WWWHelper : MonoBehaviour
-{
+public class WWWHelper : MonoBehaviour {
     /** 이벤트 연결을 위한 델리게이터 (대기자) */
     public delegate void HttpRequestDelegate(int id, WWW www);
     /** 이벤트 핸들러 */
