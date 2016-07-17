@@ -46,7 +46,7 @@
             "rangeStart" : 9001,
             "rangeEnd" : 10000,
             "text" : "1일연차사용권",
-			"type" : 2
+			"type" : 3
         }
     ]
 }

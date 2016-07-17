@@ -9,29 +9,43 @@ public class GameManager : MonoBehaviour {
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private string userUrl = "http://52.193.33.78:3000/";
     enum LoadDataNum {
-        item = 1,
-        user
+        item = 1, // 아이템 리스트
+        user, // 유저 데이터
+        log // 로그 데이터 전송
     };
     LoadDataNum loadData;
+    public static UserData userData = new UserData();
 
     public Button nextBtn;
     public Button msgBtn;
     public Button upgradeBtn;
     public Button settingBtn;
     public Text msgText;
+    public Text cashText;
+    public Text rankText;
     public GameObject giftBox;
 
     public MsgBox msgBox;
 
+    private SpriteRenderer spriteRenderer;
+    public Sprite[] giftSprites;
+
 	// Use this for initialization
 	void Start () {
         Debug.Log("start");
+        spriteRenderer = giftBox.gameObject.GetComponent<SpriteRenderer>();
         LoadData();
 	}
 	
 	// Update is called once per frame
 	void Update () {
-	
+        if (Application.platform == RuntimePlatform.Android)
+        {
+            if (Input.GetKey(KeyCode.Escape))
+            {
+                Application.Quit();
+            }
+        }
 	}
 
     public void InitScene()
@@ -46,7 +60,9 @@ public class GameManager : MonoBehaviour {
         msgBtn.gameObject.SetActive(false);
         msgText.text = "";
         nextBtn.gameObject.SetActive(true);
-        giftBox.gameObject.SetActive(true);
+        cashText.gameObject.SetActive(true);
+        rankText.gameObject.SetActive(true);
+        spriteRenderer.sprite = giftSprites[0];
         //upgradeBtn.gameObject.SetActive(true);
         //settingBtn.gameObject.SetActive(true);
     }
@@ -60,10 +76,9 @@ public class GameManager : MonoBehaviour {
         msgBtn.gameObject.SetActive(true);
         //upgradeBtn.gameObject.SetActive(false);
         //settingBtn.gameObject.SetActive(false);
+        spriteRenderer.sprite = giftSprites[item.type];
         string script = "월급상자에서 " + item.text + " 이(가) 나왔다!";
         msgBox.PrintScript(script);
-        giftBox.gameObject.SetActive(false);
-
         // 뽑은 내용 json으로 만들어서 로그 전송
 
     }
@@ -76,7 +91,9 @@ public class GameManager : MonoBehaviour {
         // 아이템 데이터 로딩
         helper.get(1, jsonUrl);
         // 유저 데이터 로딩 REST api로 post 등으로 날려야함
-        //helper.get(2, userUrl);
+        //helper.post(2, userUrl); //IDictionary<string, string> data
+        // 페북 로그인
+
     }
 
     void OnHttpRequest(int id, WWW www)
@@ -99,31 +116,12 @@ public class GameManager : MonoBehaviour {
 
             for (int i = 0; i < count; i++)
             {
-                JsonData item = items[i];
-                string description = item["description"].ToString();
-                int index = Convert.ToInt32(item["index"].ToString());
-                int rangeStart = Convert.ToInt32(item["rangeStart"].ToString());
-                int rangeEnd = Convert.ToInt32(item["rangeEnd"].ToString());
-                string text = item["text"].ToString();
-                int type = Convert.ToInt32(item["type"].ToString());
-
-                GiftItem gi = new GiftItem();
-                gi.description = description;
-                gi.index = index;
-                gi.rangeStart = rangeStart;
-                gi.rangeEnd = rangeEnd;
-                gi.text = text;
-                gi.type = type;
-                giftList.Add(gi);
-
-                /*Debug.Log("des: " + description);
-                 Debug.Log("index: " + index);
-                 Debug.Log("rangeStart: " + rangeStart);
-                 Debug.Log("rangeEnd: " + rangeEnd);
-                 Debug.Log("text: " + text);*/
+                string str = items[i].ToJson();
+                GiftItem item = JsonMapper.ToObject<GiftItem>(str);
+                giftList.Add(item);
             }
-            //GiftItem gi2 = (GiftItem)giftList[0];
-            //Debug.Log("after: " + gi2.description);
+            GiftItem gi2 = (GiftItem)giftList[0];
+            Debug.Log("after: " + gi2.description);
         }
         else if(id == (int)LoadDataNum.user)
         {

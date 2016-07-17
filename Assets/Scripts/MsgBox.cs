@@ -34,8 +34,9 @@ public class MsgBox : MonoBehaviour {
         Debug.Log("max: " + maxTextCnt + " text: " + textCnt);
         if(textCnt >= maxTextCnt)
         {
-            // 메인 화면 오브젝트들 세팅 게임매니저에서 처리
-            gm.InitScene();
+            if(standby)
+                // 메인 화면 오브젝트들 세팅 게임매니저에서 처리
+                gm.InitScene();
         }
         else
         {
