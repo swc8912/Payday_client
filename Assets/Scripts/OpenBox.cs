@@ -10,6 +10,13 @@ public class OpenBox : MonoBehaviour {
     public void onOpenClick()
     {
         Debug.Log("onopenclick");
+        // 상자가 없으면 없다고 메세지창
+        if (GameManager.userData.heart <= 0)
+        {
+            gm.NoHeart();
+            return;
+        }
+
         // 랜덤 계산해서 아이템 정함
         // 선물상자 없어지고 해당 아이템 이미지 나옴
         // 대화상자 나와서 ~~를 획득하였다고 나옴
