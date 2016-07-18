@@ -9,8 +9,9 @@ public class GoNextScene : MonoBehaviour {
     {
         Debug.Log("onclick");
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8
-        FacebookUnity fbu = new FacebookUnity();
-        fbu.initFB();
+        //FacebookUnity fbu = new FacebookUnity();
+        //fbu.initFB();
+        FacebookUnity.initFB();
 #endif
 #if UNITY_EDITOR
         SceneManager.LoadScene("IntroScene");

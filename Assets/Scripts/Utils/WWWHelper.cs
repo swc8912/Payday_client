@@ -8,8 +8,10 @@ using System.Net;
 public class WWWHelper : MonoBehaviour {
     /** 이벤트 연결을 위한 델리게이터 (대기자) */
     public delegate void HttpRequestDelegate(int id, WWW www);
+    public delegate void HttpRequestDelegate2(int id, string responseText);
     /** 이벤트 핸들러 */
     public event HttpRequestDelegate OnHttpRequest;
+    public event HttpRequestDelegate2 OnHttpRequest2;
     /** 웹 서버로의 요청을 구분하기 위한 ID값 */
     private int requestId;
     /** 이 클래스의 싱글톤 객체 */
@@ -53,6 +55,18 @@ public class WWWHelper : MonoBehaviour {
         StartCoroutine(WaitForRequest(id, www));
     }
 
+    public void put(int id, string url)
+    {
+        // PUT
+        //string url = "http://127.0.0.1:3000/method_put_test/user/id/8/ddddd";
+        Debug.Log("put url: " + url);
+        HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
+        httpWebRequest.ContentType = "application/json";
+        httpWebRequest.Method = "PUT";
+
+        StartCoroutine(WaitForRequest2(id, httpWebRequest));
+    }
+
     /** 통신 처리를 위한 코루틴 */
     private IEnumerator WaitForRequest(int id, WWW www)
     {
@@ -71,4 +85,24 @@ public class WWWHelper : MonoBehaviour {
         www.Dispose();
     }
 
+    private IEnumerator WaitForRequest2(int id, HttpWebRequest httpWebRequest)
+    {
+        HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
+        yield return httpResponse;
+        string responseText = "";
+        using (StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream()))
+        {
+            responseText += streamReader.ReadToEnd();
+            //Now you have your response.
+            //or false depending on information in the response
+        }
+        Debug.Log(responseText);
+
+        bool hasCompleteListener = (OnHttpRequest2 != null);
+
+        if (hasCompleteListener)
+        {
+            OnHttpRequest2(id, responseText);
+        }
+    }
 }

@@ -4,11 +4,13 @@ using System.Collections.Generic;
 using LitJson;
 using System;
 using UnityEngine.UI;
+using System.Net;
+using Facebook.Unity;
 
 public class GameManager : MonoBehaviour {
     public static ArrayList giftList = new ArrayList();
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
-    private string userUrl = "http://52.193.33.78:3000/";
+    private static string userUrl = "http://52.193.33.78:3000/";
     private const int MAXCHARGETIME = 10;
     private const int MAXREGENHEART = 3;
     enum LoadDataNum {
@@ -72,13 +74,13 @@ public class GameManager : MonoBehaviour {
 
     public void InitScene()
     {
+        Debug.Log("initscene");
         // 대화창 안보이게
         // 상자 이미지 보이게
         // 상자 열기 버튼 보이게
         // 직급 돈 보이게
         // 설정 강화 버튼 보이게
         // 하트 보이게
-        Debug.Log("initscene");
         msgBtn.gameObject.SetActive(false);
         msgText.text = "";
         nextBtn.gameObject.SetActive(true);
@@ -94,27 +96,27 @@ public class GameManager : MonoBehaviour {
     public void LoadData()
     {
         Debug.Log("LoadData");
-        WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
-        // 아이템 데이터 로딩
-        helper.get(1, jsonUrl);
-        // 유저 데이터 로딩 REST api로 post 등으로 날려야함
-        IDictionary<string, string> data = new Dictionary<string, string>();
-        data.Add("did", SystemInfo.deviceUniqueIdentifier);
-        data.Add("email", ""); // 디바이스 id와 email로 본인 데이터 확인
-        //helper.post(2, userUrl); //IDictionary<string, string> data
-
 #if UNITY_IOS || UNITY_ANDROID
-        // 기본 데이터
+        // 기본 데이터 설정
         userData.did = SystemInfo.deviceUniqueIdentifier;
         //Debug.Log("did: " + SystemInfo.deviceUniqueIdentifier);
 #endif
-        userData.email = "";
+        userData.email = "init@celes.kr";
         userData.heart = MAXREGENHEART;
         userData.money = 0;
         userData.rank = "인턴";
-        userData.uid = "init";
+        //userData.uid = "init";
         userData.charge = MAXCHARGETIME;
+
+        FacebookUnity.getUserDataFB();
+
+        WWWHelper helper = WWWHelper.Instance;
+        helper.OnHttpRequest += OnHttpRequest;
+        helper.OnHttpRequest2 += OnHttpRequest2;
+        // 아이템 데이터 로딩
+        helper.get(1, jsonUrl);
+        //helper.put(3, userUrl + "payday?author=park");
+
     }
 
     void OnHttpRequest(int id, WWW www)
@@ -126,7 +128,7 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            Debug.Log(www.text);
+            Debug.Log("onhttprequest res: " + www.text);
         }
 
         JsonData json = JsonMapper.ToObject(www.text);
@@ -146,7 +148,107 @@ public class GameManager : MonoBehaviour {
         }
         else if(id == (int)LoadDataNum.user)
         {
+            Debug.Log("user aaa");
+            try
+            {
+                // json 값 없는것 처리해야됨
+                if (json["results"].Count > 0)
+                {
+                    string str = json["results"].ToJson();
+                    UserData data = JsonMapper.ToObject<UserData>(str);
+                    userData.money = data.money;
+                    userData.rank = data.rank;
+                    userData.heart = data.heart;
+                    userData.charge = data.charge;
+                    userData.currentBoxId = data.currentBoxId;
+                    userData.getPush = data.getPush;
+                    // 아이템 받은것도 처리해야함
+                }
+                else if (json["result"].Count == 0)
+                {
+                    Debug.Log("email get go");
+                    // 새 유저 추가
+                    WWWHelper helper = WWWHelper.Instance;
+                    IDictionary<string, string> data = new Dictionary<string, string>();
+                    data.Add("did", userData.did);
+                    data.Add("email", userData.email);
+                    data.Add("money", "0");
+                    data.Add("rank", "인턴");
+                    data.Add("heart", "3");
+                    data.Add("charge", "10");
+                    data.Add("currentBoxId", "1");
+                    data.Add("pickItems", "0");
+                    data.Add("getPush", "true");
+                    helper.post(2, userUrl + "payday", data);
+                }
+            }
+            catch (KeyNotFoundException e)
+            {
+                Debug.Log("keynotfoundexp");
+            }
+        }
+    }
 
+    void OnHttpRequest2(int id, string responseText)
+    {
+        Debug.Log("onhttpreq2: " + responseText);
+    }
+
+    public static void HandleResult(IResult result)
+    {
+        Debug.Log("handleresult");
+        if (result == null)
+        {
+            //this.LastResponse = "Null Response\n";
+            //LogView.AddLog(this.LastResponse);
+            return;
+        }
+
+        //this.LastResponseTexture = null;
+
+        // Some platforms return the empty string instead of null.
+        if (!string.IsNullOrEmpty(result.Error))
+        {
+            //this.Status = "Error - Check log for details";
+            //this.LastResponse = "Error Response:\n" + result.Error;
+            //LogView.AddLog(result.Error);
+        }
+        else if (result.Cancelled)
+        {
+            //this.Status = "Cancelled - Check log for details";
+            //this.LastResponse = "Cancelled Response:\n" + result.RawResult;
+            //LogView.AddLog(result.RawResult);
+        }
+        else if (!string.IsNullOrEmpty(result.RawResult))
+        {
+            //this.Status = "Success - Check log for details";
+            //this.LastResponse = "Success Response:\n" + result.RawResult;
+            //LogView.AddLog(result.RawResult);
+            JsonData json = JsonMapper.ToObject(result.RawResult);
+            try
+            {
+                string email = json["email"].ToString();
+                if (email != null && email.Length > 0)
+                {
+                    Debug.Log("fb result email: " + email);
+                    GameManager.userData.email = email;
+                    WWWHelper helper = WWWHelper.Instance;
+                    // 유저 데이터 로딩
+                    IDictionary<string, string> data = new Dictionary<string, string>();
+                    data.Add("did", SystemInfo.deviceUniqueIdentifier);
+                    data.Add("email", userData.email); // 디바이스 id와 email로 본인 데이터 확인
+                    helper.post(2, userUrl + "payday/user", data); //IDictionary<string, string> data
+                }
+            }
+            catch (Exception e)
+            {
+                Debug.Log(e.Message);
+            }
+        }
+        else
+        {
+            //this.LastResponse = "Empty Response\n";
+            //LogView.AddLog(this.LastResponse);
         }
     }
 

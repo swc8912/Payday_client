@@ -5,26 +5,32 @@ using System.Linq;
 using UnityEngine;
 using Facebook.Unity;
 using UnityEngine.SceneManagement;
+using LitJson;
 
-public class FacebookUnity {
-    public void initFB()
+public static class FacebookUnity {
+    public static void initFB()
     {
-        FB.Init(this.OnInitComplete, this.OnHideUnity);
+        FB.Init(OnInitComplete, OnHideUnity);
         //this.Status = "FB.Init() called with " + FB.AppId;
     }
 
-    public void loginFB()
+    public static void loginFB()
     {
-        this.CallFBLogin();
+        CallFBLogin();
         //this.Status = "Login called";
     }
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8 || UNITY_EDITOR
-    public void logoutFB()
+    public static void logoutFB()
     {
         CallFBLogout();
         //this.Status = "Logout called";
     }
 #endif
+
+    public static void getUserDataFB()
+    {
+        FB.API("/me?fields=id,email", HttpMethod.GET, GameManager.HandleResult);
+    }
 /*
     protected override void GetGui()
     {
@@ -108,27 +114,27 @@ public class FacebookUnity {
         GUI.enabled = enabled;
     }*/
 
-    private void CallFBLogin()
+    private static void CallFBLogin()
     {
-        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, this.HandleResult);
+        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, GameManager.HandleResult);
     }
 
-    private void CallFBLoginForPublish()
+    private static void CallFBLoginForPublish()
     {
         // It is generally good behavior to split asking for read and publish
         // permissions rather than ask for them all at once.
         //
         // In your own game, consider postponing this call until the moment
         // you actually need it.
-        FB.LogInWithPublishPermissions(new List<string>() { "publish_actions" }, this.HandleResult);
+        FB.LogInWithPublishPermissions(new List<string>() { "publish_actions" }, GameManager.HandleResult);
     }
 
-    private void CallFBLogout()
+    private static void CallFBLogout()
     {
         FB.LogOut();
     }
 
-    private void OnInitComplete()
+    private static void OnInitComplete()
     {
         //this.Status = "Success - Check logk for details";
         //this.LastResponse = "Success Response: OnInitComplete Called\n";
@@ -138,52 +144,17 @@ public class FacebookUnity {
         //    FB.IsInitialized);
         //LogView.AddLog(logMessage);
         if (!FB.IsLoggedIn)
-            this.loginFB();
+            loginFB();
         else
             SceneManager.LoadScene("IntroScene");
     }
 
-    private void OnHideUnity(bool isGameShown)
+    private static void OnHideUnity(bool isGameShown)
     {
         //this.Status = "Success - Check logk for details";
         //this.LastResponse = string.Format("Success Response: OnHideUnity Called {0}\n", isGameShown);
         //LogView.AddLog("Is game shown: " + isGameShown);
     }
 
-    protected void HandleResult(IResult result)
-    {
-        if (result == null)
-        {
-            //this.LastResponse = "Null Response\n";
-            //LogView.AddLog(this.LastResponse);
-            return;
-        }
-
-        //this.LastResponseTexture = null;
-
-        // Some platforms return the empty string instead of null.
-        if (!string.IsNullOrEmpty(result.Error))
-        {
-            //this.Status = "Error - Check log for details";
-            //this.LastResponse = "Error Response:\n" + result.Error;
-            //LogView.AddLog(result.Error);
-        }
-        else if (result.Cancelled)
-        {
-            //this.Status = "Cancelled - Check log for details";
-            //this.LastResponse = "Cancelled Response:\n" + result.RawResult;
-            //LogView.AddLog(result.RawResult);
-        }
-        else if (!string.IsNullOrEmpty(result.RawResult))
-        {
-            //this.Status = "Success - Check log for details";
-            //this.LastResponse = "Success Response:\n" + result.RawResult;
-            //LogView.AddLog(result.RawResult);
-        }
-        else
-        {
-            //this.LastResponse = "Empty Response\n";
-            //LogView.AddLog(this.LastResponse);
-        }
-    }
+    
 }
