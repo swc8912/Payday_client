@@ -55,10 +55,22 @@ public class WWWHelper : MonoBehaviour {
         StartCoroutine(WaitForRequest(id, www));
     }
 
+    public void post(int id, string url, string jsonStr)
+    {
+        Debug.Log("post_ go");
+        byte[] data = Encoding.UTF8.GetBytes(jsonStr.ToCharArray());
+        Hashtable header = new Hashtable();
+        header.Add("Content-Type", "text/json");
+        header.Add("Content-Length", data.Length);
+        //WWW www = new WWW(url, data, header);
+        //byte[] data = Encoding.ASCII.GetBytes(jsonStr.ToCharArray());
+        //WWW www = new WWW(url, data);
+        //StartCoroutine(WaitForRequest(id, www));
+    }
+
     public void put(int id, string url)
     {
         // PUT
-        //string url = "http://127.0.0.1:3000/method_put_test/user/id/8/ddddd";
         Debug.Log("put url: " + url);
         HttpWebRequest httpWebRequest = (HttpWebRequest)WebRequest.Create(url);
         httpWebRequest.ContentType = "application/json";
