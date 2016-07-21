@@ -45,6 +45,9 @@ public class Test : MonoBehaviour {
         userData.currentBoxId = "1";
         userData.getPush = true;
         userData.pickItems = new ArrayList();
+
+        WWWHelper helper = WWWHelper.Instance;
+        helper.OnHttpRequest += OnHttpRequest;
 	}
 	
 	// Update is called once per frame
@@ -56,7 +59,6 @@ public class Test : MonoBehaviour {
     {
         Debug.Log("insertnewuser");
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
         IDictionary<string, string> data = new Dictionary<string, string>();
         data.Add("did", userData.did);
         data.Add("email", userData.email);
@@ -77,7 +79,6 @@ public class Test : MonoBehaviour {
         // put
         Debug.Log("UpdateUser");
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
         string data = "";
         UserData ud = new UserData();
         ud.did = "asdfaaa";
@@ -132,7 +133,6 @@ public class Test : MonoBehaviour {
     {
         Debug.Log("GetUser");
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
         helper.get(2, userUrl + "/?email=" + userData.email);
     }
 
@@ -140,7 +140,6 @@ public class Test : MonoBehaviour {
     {
         Debug.Log("GetBoxData");
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
         helper.get(1, userUrl + "/?box=true");
     }
 
@@ -157,11 +156,9 @@ public class Test : MonoBehaviour {
     {
         Debug.Log("InsertTimeLog");
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
         LogData logData = new LogData();
         logData.email = userData.email;
         logData.logCmd = (int)LogCmd.firstIncome;
-        logData.getItemIdx = 0;
         logData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
         Debug.Log("date: " + logData.date);
         IDictionary<string, string> data = new Dictionary<string, string>();
@@ -183,17 +180,15 @@ public class Test : MonoBehaviour {
         item.type = 1;
         item.value = 4;
         WWWHelper helper = WWWHelper.Instance;
-        helper.OnHttpRequest += OnHttpRequest;
-        LogData logData = new LogData();
-        logData.email = userData.email;
-        logData.logCmd = (int)LogCmd.getItem;
-        logData.getItemIdx = item.index;
-        logData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
-        Debug.Log("date: " + logData.date);
+        GetItemData itemData = new GetItemData();
+        itemData.email = userData.email;
+        itemData.itemIdx = item.index;
+        itemData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        Debug.Log("date: " + itemData.date);
         IDictionary<string, string> data = new Dictionary<string, string>();
-        data.Add("logCmd", "" + logData.logCmd);
-        data.Add("email", logData.email);
-        data.Add("date", logData.date);
+        data.Add("email", itemData.email);
+        data.Add("itemIdx", "" + itemData.itemIdx);
+        data.Add("date", itemData.date);
         //string itemStr = "[{'description' : '4만원이다.','index' : 10001,'rangeStart' : 1,'rangeEnd' : 4000,'text' : '4만원','type' : 1,'value' : 4}]";
         helper.post(3, userUrl, data);
     }
