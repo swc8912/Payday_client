@@ -202,7 +202,10 @@ public class Test : MonoBehaviour {
         }
         else
         {
-            Debug.Log("onhttprequest res: " + www.text);
+            if (www.text.Length < 5000)
+                Debug.Log("onhttprequest res: " + www.text);
+            else
+                Debug.Log("onhttprequest res too long");
         }
 
         JsonData json = JsonMapper.ToObject(www.text);
@@ -214,16 +217,17 @@ public class Test : MonoBehaviour {
             }
             else
             {
-                for (int j = 0; j < json["results"].Count; j++)
+                JsonData data = json["results"][0]["bdata"];
+                //Debug.Log("data str: " + JsonMapper.ToJson(data).ToString());
+                for (int i = 0; i < data.Count; i++)
                 {
-                    JsonData data = json[j]["results"]["bdata"];
-                    for (int i = 0; i < data.Count; i++)
-                    {
-                        GameManager.GiftList[j].Add(JsonMapper.ToObject<GiftItem>(data[i].ToString()));
-                    }
-                    GiftItem it = (GiftItem)GameManager.GiftList[0][0];
-                    Debug.Log("gift text: " + it.text);
+                    //Debug.Log("d: " + JsonMapper.ToJson(data[j]));
+                    string jsonStr = JsonMapper.ToJson(data[i]);
+                    if (GameManager.GiftList[i] == null)
+                        GameManager.GiftList[i] = new ArrayList();
+                    GameManager.GiftList[i].Add(JsonMapper.ToObject<BoxData>(jsonStr));
                 }
+                Debug.Log("box item data loaded");
             }
         }
         else if (id == (int)LoadDataNum.user)
