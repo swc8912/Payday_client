@@ -1,58 +1,644 @@
 {
-    "data" : [
+  "boxdata": [
+    {
+      "name": "월급상자",
+      "boxId": "1",
+      "cost": 20,
+      "rangeStart": 5,
+      "rangeEnd": 5005,
+      "itemList": [
         {
-            "description" : "4만원이다.",
-            "index" : 10001,
-            "rangeStart" : 1,
-            "rangeEnd" : 4000,
-            "text" : "4만원",
-			"type" : 1,
-			"value" : 4
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
         },
         {
-            "description" : "20만원이다.",
-            "index" : 10002,
-            "rangeStart" : 4001,
-            "rangeEnd" : 6000,
-            "text" : "20만원",
-			"type" : 1,
-			"value" : 20
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
         },
         {
-            "description" : "100만원이다..",
-            "index" : 10003,
-            "rangeStart" : 6001,
-            "rangeEnd" : 7000,
-            "text" : "100만원",
-			"type" : 1,
-			"value" : 100
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
         },
         {
-            "description" : "500만원이다..",
-            "index" : 10004,
-            "rangeStart" : 7001,
-            "rangeEnd" : 8000,
-            "text" : "500만원",
-			"type" : 1,
-			"value" : 500
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
         },
         {
-            "description" : "BMW 100일 이용권이다.",
-            "index" : 10005,
-            "rangeStart" : 8001,
-            "rangeEnd" : 9000,
-            "text" : "BMW(100일)",
-			"type" : 2,
-			"value" : 0
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
         },
         {
-            "description" : "눈치보지않고 쓸수있는 연차사용권이다.",
-            "index" : 10006,
-            "rangeStart" : 9001,
-            "rangeEnd" : 10000,
-            "text" : "1일연차사용권",
-			"type" : 3,
-			"value" : 0
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
         }
-    ]
+      ],
+      "nextId": "2"
+    },
+    {
+      "name": "빛나는 월급상자",
+      "boxId": "2",
+      "cost": 40,
+      "rangeStart": 5,
+      "rangeEnd": 4005,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "3"
+    },
+    {
+      "name": "밝게 빛나는 월급상자",
+      "boxId": "3",
+      "cost": 80,
+      "rangeStart": 5,
+      "rangeEnd": 3005,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "4"
+    },
+    {
+      "name": "환하게 빛나는 월급상자",
+      "boxId": "4",
+      "cost": 1600,
+      "rangeStart": 5,
+      "rangeEnd": 2005,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "5"
+    },
+    {
+      "name": "강렬하게 빛나는 월급상자",
+      "boxId": "5",
+      "cost": 320,
+      "rangeStart": 5,
+      "rangeEnd": 1005,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "6"
+    },
+    {
+      "name": "클라스가 다른 월급상자",
+      "boxId": "6",
+      "cost": 640,
+      "rangeStart": 5,
+      "rangeEnd": 905,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "7"
+    },
+    {
+      "name": "존재감이 확실한 월급상자",
+      "boxId": "7",
+      "cost": 1280,
+      "rangeStart": 5,
+      "rangeEnd": 805,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "8"
+    },
+    {
+      "name": "대박의 기운이 느껴지는 월급상자",
+      "boxId": "8",
+      "cost": 2560,
+      "rangeStart": 5,
+      "rangeEnd": 705,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "9"
+    },
+    {
+      "name": "전설의 월급상자",
+      "boxId": "9",
+      "cost": 5120,
+      "rangeStart": 5,
+      "rangeEnd": 705,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "10"
+    },
+    {
+      "name": "전설의 레전드 월급상자",
+      "boxId": "10",
+      "cost": 10280,
+      "rangeStart": 5,
+      "rangeEnd": 505,
+      "itemList": [
+        {
+          "description": "4만원이다.",
+          "index": 10001,
+          "rangeStart": 1,
+          "rangeEnd": 4000,
+          "text": "4만원",
+          "type": 1,
+          "value": 4
+        },
+        {
+          "description": "20만원이다.",
+          "index": 10002,
+          "rangeStart": 4001,
+          "rangeEnd": 6000,
+          "text": "20만원",
+          "type": 1,
+          "value": 20
+        },
+        {
+          "description": "100만원이다..",
+          "index": 10003,
+          "rangeStart": 6001,
+          "rangeEnd": 7000,
+          "text": "100만원",
+          "type": 1,
+          "value": 100
+        },
+        {
+          "description": "500만원이다..",
+          "index": 10004,
+          "rangeStart": 7001,
+          "rangeEnd": 8000,
+          "text": "500만원",
+          "type": 1,
+          "value": 500
+        },
+        {
+          "description": "BMW 100일 이용권이다.",
+          "index": 10005,
+          "rangeStart": 8001,
+          "rangeEnd": 9000,
+          "text": "BMW(100일)",
+          "type": 2,
+          "value": 0
+        },
+        {
+          "description": "눈치보지않고 쓸수있는 연차사용권이다.",
+          "index": 10006,
+          "rangeStart": 9001,
+          "rangeEnd": 10000,
+          "text": "1일연차사용권",
+          "type": 3,
+          "value": 0
+        }
+      ],
+      "nextId": "0"
+    }
+  ]
 }

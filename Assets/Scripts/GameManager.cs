@@ -9,11 +9,12 @@ using Facebook.Unity;
 
 public class GameManager : MonoBehaviour {
     public static bool debug = true;
-    public static ArrayList GiftList = new ArrayList();
+    public static ArrayList[] GiftList = new ArrayList[MAXBOXNUMBER];
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private static string userUrl = "http://52.193.33.78:3000/payday";
     private const int MAXCHARGETIME = 10;
     private const int MAXREGENHEART = 3;
+    private const int MAXBOXNUMBER = 10;
     enum LoadDataNum {
         item = 1, // 아이템 리스트
         user, // 유저 데이터
@@ -145,10 +146,10 @@ public class GameManager : MonoBehaviour {
             {
                 string str = items[i].ToJson();
                 GiftItem item = JsonMapper.ToObject<GiftItem>(str);
-                GiftList.Add(item);
+                //GiftList.Add(item);
             }
-            GiftItem gi2 = (GiftItem)GiftList[0];
-            Debug.Log("after: " + gi2.description);
+            //GiftItem gi2 = (GiftItem)GiftList[0];
+            //Debug.Log("after: " + gi2.description);
         }
         else if(id == (int)LoadDataNum.user)
         {

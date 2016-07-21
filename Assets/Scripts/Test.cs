@@ -50,11 +50,6 @@ public class Test : MonoBehaviour {
         helper.OnHttpRequest += OnHttpRequest;
 	}
 	
-	// Update is called once per frame
-	public void Update () {
-	
-	}
-
     public void InsertNewUser()
     {
         Debug.Log("insertnewuser");
@@ -219,13 +214,16 @@ public class Test : MonoBehaviour {
             }
             else
             {
-                JsonData data = json["results"];
-                for (int i = 0; i < data.Count; i++)
+                for (int j = 0; j < json["results"].Count; j++)
                 {
-                    GameManager.GiftList.Add(JsonMapper.ToObject<GiftItem>(data[i].ToString()));
+                    JsonData data = json[j]["results"]["bdata"];
+                    for (int i = 0; i < data.Count; i++)
+                    {
+                        GameManager.GiftList[j].Add(JsonMapper.ToObject<GiftItem>(data[i].ToString()));
+                    }
+                    GiftItem it = (GiftItem)GameManager.GiftList[0][0];
+                    Debug.Log("gift text: " + it.text);
                 }
-                GiftItem it = (GiftItem)GameManager.GiftList[0];
-                Debug.Log("gift text: " + it.text);
             }
         }
         else if (id == (int)LoadDataNum.user)
