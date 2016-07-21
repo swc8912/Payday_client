@@ -12,6 +12,7 @@ public class GameManager : MonoBehaviour {
     public static ArrayList[] GiftList = new ArrayList[MAXBOXNUMBER];
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private static string userUrl = "http://52.193.33.78:3000/payday";
+    //private string userUrl = "http://localhost:3000/payday";
     private const int MAXCHARGETIME = 10;
     private const int MAXREGENHEART = 3;
     private const int MAXBOXNUMBER = 10;
@@ -21,6 +22,14 @@ public class GameManager : MonoBehaviour {
         log // 로그 데이터 전송
     };
     LoadDataNum loadData;
+    enum LogCmd
+    {
+        firstIncome = 1,
+        playGame,
+        getItem,
+        quitApp
+    };
+    LogCmd logCmd;
     public static UserData userData = new UserData();
 
     public Button nextBtn;
@@ -38,6 +47,9 @@ public class GameManager : MonoBehaviour {
 
     private SpriteRenderer spriteRenderer;
     public Sprite[] giftSprites;
+
+    private DateTime nowTime;
+    private DateTime quitTime;
 
 	// Use this for initialization
 	void Start () {
@@ -61,6 +73,8 @@ public class GameManager : MonoBehaviour {
         timerText.text = userData.charge.ToString();
         heartText.text = "X " + userData.heart;
         StartCoroutine("HeartTimer");
+
+        nowTime = DateTime.UtcNow;
 	}
 	
 	// Update is called once per frame
@@ -69,6 +83,12 @@ public class GameManager : MonoBehaviour {
         {
             if (Input.GetKey(KeyCode.Escape))
             {
+                // 앱 종료 로그 전송
+                quitTime = DateTime.UtcNow;
+                long playTime = (long)((quitTime - nowTime).Milliseconds) / 1000L;
+                Debug.Log("playTime: " + playTime);
+                InsertTimeLog((int)LogCmd.quitApp, 0);
+                InsertTimeLog((int)LogCmd.playGame, playTime);
                 Application.Quit();
             }
         }
@@ -112,6 +132,7 @@ public class GameManager : MonoBehaviour {
         userData.charge = MAXCHARGETIME;
         userData.currentBoxId = "1";
         userData.getPush = true;
+        userData.pickItems = new ArrayList();
 #if UNITY_IOS || UNITY_ANDROID
         FacebookUnity.getUserDataFB();
 #endif
@@ -119,9 +140,92 @@ public class GameManager : MonoBehaviour {
         helper.OnHttpRequest += OnHttpRequest;
         helper.OnHttpRequest2 += OnHttpRequest2;
         // 아이템 데이터 로딩
-        helper.get(1, jsonUrl);
-        //helper.put(3, userUrl + "/?author=park");
+        GetBoxData();
+    }
 
+    public void InsertNewUser()
+    {
+        Debug.Log("insertnewuser");
+        WWWHelper helper = WWWHelper.Instance;
+        IDictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("did", userData.did);
+        data.Add("email", userData.email);
+        data.Add("money", "0");
+        data.Add("rank", "인턴");
+        data.Add("heart", "3");
+        data.Add("charge", "10");
+        data.Add("currentBoxId", "1");
+        string itemStr = "[]";
+        data.Add("pickItems", itemStr);
+        data.Add("getPush", "true");
+        helper.post(2, userUrl, data);
+    }
+
+    public void UpdateUser() // userData를 갱신해놓으면 그 데이터를 업데이트한다.
+    {
+        // put
+        Debug.Log("UpdateUser");
+        WWWHelper helper = WWWHelper.Instance;
+        string data = JsonMapper.ToJson(userData);
+        Debug.Log("put data: " + data);
+        helper.put(2, userUrl + "/?email=" + userData.email, data);
+    }
+
+    public void GetUser()
+    {
+        Debug.Log("GetUser");
+        WWWHelper helper = WWWHelper.Instance;
+        helper.get(2, userUrl + "/?email=" + userData.email);
+    }
+
+    public void GetBoxData()
+    {
+        Debug.Log("GetBoxData");
+        WWWHelper helper = WWWHelper.Instance;
+        helper.get(1, userUrl + "/?box=true");
+    }
+
+    public static void InsertTimeLog(int logType, long time)
+    {
+        Debug.Log("InsertTimeLog");
+        WWWHelper helper = WWWHelper.Instance;
+        LogData logData = new LogData();
+        logData.email = userData.email;
+        logData.logCmd = logType; //(int)LogCmd.firstIncome;
+        if(time > 0)
+            logData.date = time.ToString();
+        else
+            logData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        Debug.Log("date: " + logData.date);
+        IDictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("logCmd", "" + logData.logCmd);
+        data.Add("email", logData.email);
+        data.Add("date", logData.date);
+        helper.post(3, userUrl, data);
+    }
+
+    public void InsertGetItemLog(GiftItem item)
+    {
+        Debug.Log("InsertGetItemLog");
+        /*GiftItem item = new GiftItem();
+        item.description = "4만원이다.";
+        item.index = 10001;
+        item.rangeStart = 1;
+        item.rangeEnd = 4000;
+        item.text = "4만원";
+        item.type = 1;
+        item.value = 4;*/
+        WWWHelper helper = WWWHelper.Instance;
+        GetItemData itemData = new GetItemData();
+        itemData.email = userData.email;
+        itemData.itemIdx = item.index;
+        itemData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        Debug.Log("date: " + itemData.date);
+        IDictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("email", itemData.email);
+        data.Add("itemIdx", "" + itemData.itemIdx);
+        data.Add("date", itemData.date);
+        helper.post(3, userUrl, data);
     }
 
     void OnHttpRequest(int id, WWW www)
@@ -133,67 +237,82 @@ public class GameManager : MonoBehaviour {
         }
         else
         {
-            Debug.Log("onhttprequest res: " + www.text);
+            if (www.text.Length < 5000)
+                Debug.Log("onhttprequest res: " + www.text);
+            else
+                Debug.Log("onhttprequest res too long");
         }
 
         JsonData json = JsonMapper.ToObject(www.text);
-        if (id == (int)LoadDataNum.item)
+        if (id == (int)LoadDataNum.item) // 박스 데이터 정보 얻기
         {
-            JsonData items = json["data"];
-            int count = items.Count;
-
-            for (int i = 0; i < count; i++)
+            if (json["results"].Count == 0)
             {
-                string str = items[i].ToJson();
-                GiftItem item = JsonMapper.ToObject<GiftItem>(str);
-                //GiftList.Add(item);
+                Debug.Log("box item data not found");
             }
-            //GiftItem gi2 = (GiftItem)GiftList[0];
-            //Debug.Log("after: " + gi2.description);
+            else
+            {
+                JsonData data = json["results"][0]["bdata"];
+                //Debug.Log("data str: " + JsonMapper.ToJson(data).ToString());
+                for (int i = 0; i < data.Count; i++)
+                {
+                    //Debug.Log("d: " + JsonMapper.ToJson(data[j]));
+                    string jsonStr = JsonMapper.ToJson(data[i]);
+                    if (GameManager.GiftList[i] == null)
+                        GameManager.GiftList[i] = new ArrayList();
+                    GameManager.GiftList[i].Add(JsonMapper.ToObject<BoxData>(jsonStr));
+                }
+                Debug.Log("box item data loaded");
+            }
         }
-        else if(id == (int)LoadDataNum.user)
+        else if (id == (int)LoadDataNum.user)
         {
             Debug.Log("user aaa");
             try
             {
-                if (json["results"].Count == 0)
+                if (json["results"].Count == 0) // 없는 경우 새로 추가
                 {
-                    Debug.Log("email get go");
-                    // 새 유저 추가
-                    WWWHelper helper = WWWHelper.Instance;
-                    /*IDictionary<string, string> data = new Dictionary<string, string>();
-                    data.Add("did", userData.did);
-                    data.Add("email", userData.email);
-                    data.Add("money", "0");
-                    data.Add("rank", "인턴");
-                    data.Add("heart", "3");
-                    data.Add("charge", "10");
-                    data.Add("currentBoxId", "1");
-                    data.Add("pickItems", "0");
-                    data.Add("getPush", "true");*/
-                    string str = JsonMapper.ToJson(userData);
-                    Debug.Log("new user str: " + str);
-                    helper.post(2, userUrl, str);
+                    Debug.Log("result count 0 insert new user");
+                    InsertNewUser();
                 }
-                else
+                else // 유저 데이터가 있는 경우 적용
                 {
-                    string str = json["results"].ToJson();
-                    Debug.Log("results: " + str);
-                    UserData data = JsonMapper.ToObject<UserData>(str);
-                    userData.money = data.money;
-                    userData.rank = data.rank;
-                    userData.heart = data.heart;
-                    userData.charge = data.charge;
-                    userData.currentBoxId = data.currentBoxId;
-                    userData.getPush = data.getPush;
-                    userData.pickItems = data.pickItems;
-                    // 아이템 받은것도 처리해야함
+                    JsonData data = json["results"];
+                    if (data.IsArray) // 유저 데이터 불러오기 후
+                    {
+                        Debug.Log("data is array");
+                        data = data[0];
+                    }
+                    else // 유저 추가 후
+                        Debug.Log("data is not array");
+                    Debug.Log("data count: " + data.Count);
+                    userData.money = Int32.Parse(data["money"].ToString());
+                    userData.rank = data["rank"].ToString();
+                    userData.heart = Int32.Parse(data["heart"].ToString());
+                    userData.charge = Int32.Parse(data["charge"].ToString());
+                    userData.currentBoxId = data["currentBoxId"].ToString();
+                    if (data["getPush"].ToString().Equals("true"))
+                        userData.getPush = true;
+                    else if (data["getPush"].ToString().Equals("false"))
+                        userData.getPush = false;
+                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToString());
+                    int cnt = items.Count;
+                    userData.pickItems.Clear();
+                    for (int i = 0; i < cnt; i++)
+                    {
+                        userData.pickItems.Add(JsonMapper.ToObject<GiftItem>(items[i].ToJson()));
+                    }
+                    Debug.Log("get uesrdata end");
                 }
             }
             catch (KeyNotFoundException e)
             {
-                Debug.Log("keynotfoundexp");
+                Debug.Log("keynotfoundexp: " + www.text);
             }
+        }
+        else if (id == (int)LoadDataNum.log)
+        {
+
         }
     }
 
@@ -233,7 +352,7 @@ public class GameManager : MonoBehaviour {
             //this.LastResponse = "Success Response:\n" + result.RawResult;
             //LogView.AddLog(result.RawResult);
             JsonData json = JsonMapper.ToObject(result.RawResult);
-            try
+            try // 페이스북에서 받은 이메일 정보로 유저 데이터 요청
             {
                 string email = json["email"].ToString();
                 if (email != null && email.Length > 0)
@@ -242,6 +361,8 @@ public class GameManager : MonoBehaviour {
                     GameManager.userData.email = email;
                     WWWHelper helper = WWWHelper.Instance;
                     helper.get(2, userUrl + "/?email=" + userData.email);
+                    // 처음 앱 킨 로그 전송
+                    GameManager.InsertTimeLog((int)LogCmd.firstIncome, 0);
                 }
             }
             catch (Exception e)
@@ -282,7 +403,7 @@ public class GameManager : MonoBehaviour {
         }
 
         // 뽑은 내용 json으로 만들어서 로그 전송
-
+        InsertGetItemLog(item);
     }
 
     public void NoHeart()

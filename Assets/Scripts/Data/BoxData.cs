@@ -1,5 +1,6 @@
 ﻿using UnityEngine;
 using System.Collections;
+using System.Collections.Generic;
 
 public class BoxData {
     // 이름
@@ -14,6 +15,6 @@ public class BoxData {
     public int cost { get; set; }
     public int rangeStart { get; set; }
     public int rangeEnd { get; set; }
-    public ArrayList itemList { get; set; }
+    public List<GiftItem> itemList { get; set; }
     public string nextId { get; set; }
 }
