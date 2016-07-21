@@ -243,16 +243,24 @@ public class Test : MonoBehaviour {
                 else // 유저 데이터가 있는 경우 적용
                 {
                     JsonData data = json["results"];
-                    userData.money = Int32.Parse(data[0]["money"].ToString());
-                    userData.rank = data[0]["rank"].ToString();
-                    userData.heart = Int32.Parse(data[0]["heart"].ToString());
-                    userData.charge = Int32.Parse(data[0]["charge"].ToString());
-                    userData.currentBoxId = data[0]["currentBoxId"].ToString();
-                    if (data[0]["getPush"].ToString().Equals("true"))
+                    if (data.IsArray) // 유저 데이터 불러오기 후
+                    {
+                        Debug.Log("data is array");
+                        data = data[0];
+                    }
+                    else // 유저 추가 후
+                        Debug.Log("data is not array");
+                    Debug.Log("data count: " + data.Count);
+                    userData.money = Int32.Parse(data["money"].ToString());
+                    userData.rank = data["rank"].ToString();
+                    userData.heart = Int32.Parse(data["heart"].ToString());
+                    userData.charge = Int32.Parse(data["charge"].ToString());
+                    userData.currentBoxId = data["currentBoxId"].ToString();
+                    if (data["getPush"].ToString().Equals("true"))
                         userData.getPush = true;
-                    else if (data[0]["getPush"].ToString().Equals("false"))
+                    else if (data["getPush"].ToString().Equals("false"))
                         userData.getPush = false;
-                    JsonData items = JsonMapper.ToObject(data[0]["pickItems"].ToString());
+                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToString());
                     int cnt = items.Count;
                     userData.pickItems.Clear();
                     for (int i = 0; i < cnt; i++)
