@@ -25,9 +25,9 @@ public class OpenBox : MonoBehaviour {
         Debug.Log("val: " + val);
 
         GiftItem rightItem = new GiftItem();
-        for (int i = 0; i < GameManager.giftList.Count; i++)
+        for (int i = 0; i < GameManager.GiftList.Count; i++)
         {
-            GiftItem item = (GiftItem)GameManager.giftList[i];
+            GiftItem item = (GiftItem)GameManager.GiftList[i];
             if (val >= item.rangeStart && val <= item.rangeEnd)
             {
                 Debug.Log(item.text + " 당첨!");

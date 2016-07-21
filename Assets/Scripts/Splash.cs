@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 public class Splash : MonoBehaviour {
     public Text tapText;
+    //public RawImage image;
     private bool flag;
 
 	// Use this for initialization

@@ -17,7 +17,8 @@ public class Test : MonoBehaviour {
     public Button btn4;
     public Button btn5;
     public Button btn6;
-    private string userUrl = "http://52.193.33.78:3000/payday";
+    //private string userUrl = "http://52.193.33.78:3000/payday";
+    private string userUrl = "http://localhost:3000/payday";
     enum LoadDataNum
     {
         item = 1, // 아이템 리스트
@@ -73,21 +74,58 @@ public class Test : MonoBehaviour {
 
     public void UpdateUser()
     {
-        // put으로 해야함
+        // put
         Debug.Log("UpdateUser");
         WWWHelper helper = WWWHelper.Instance;
         helper.OnHttpRequest += OnHttpRequest;
-        IDictionary<string, string> data = new Dictionary<string, string>();
+        string data = "";
+        UserData ud = new UserData();
+        ud.did = "asdfaaa";
+        ud.email = "init@celes.kr";
+        ud.money = 2554;
+        ud.rank = "이사";
+        ud.heart = 5;
+        ud.charge = 10;
+        ud.currentBoxId = "10";
+        //string itemStr1 = "[{'description' : '4만원이다.','index' : 10001,'rangeStart' : 1,'rangeEnd' : 4000,'text' : '4만원','type' : 1,'value' : 4}]";
+        //string itemStr2 = "{'description' : '4만원이다.','index' : 10001,'rangeStart' : 1,'rangeEnd' : 4000,'text' : '4만원','type' : 1,'value' : 4}";
+        GiftItem item1 = new GiftItem();
+        item1.description = "4만원이다.";
+        item1.index = 10001;
+        item1.rangeStart = 1;
+        item1.rangeEnd = 4000;
+        item1.text = "4만원";
+        item1.type = 1;
+        item1.value = 4;
+        ud.pickItems = new ArrayList();
+        ud.pickItems.Add(item1);
+        GiftItem item2 = new GiftItem();
+        item2.description = "10만원이다.";
+        item2.index = 10002;
+        item2.rangeStart = 4001;
+        item2.rangeEnd = 8000;
+        item2.text = "10만원";
+        item2.type = 1;
+        item2.value = 10;
+        ud.pickItems.Add(item2);
+        //JsonData jd = JsonMapper.ToObject(itemStr2);
+        //for (int i = 0; i < jd.Count; i++)
+          //  ud.pickItems.Add(JsonMapper.ToObject<GiftItem>(jd[i].ToString())); 
+        //GiftItem gi = (GiftItem)ud.pickItems[0];
+        //ud.pickItems = itemStr;
+        ud.getPush = true;
+        data = JsonMapper.ToJson(ud);
+        Debug.Log("put data: " + data);
+        /*IDictionary<string, string> data = new Dictionary<string, string>();
         data.Add("money", "22540");
         data.Add("rank", "이사");
         data.Add("heart", "5");
         data.Add("charge", "10");
         data.Add("currentBoxId", "6");
-        string itemStr = "[{'description' : '4만원이다.','index' : 10001,'rangeStart' : 1,'rangeEnd' : 4000,'text' : '4만원','type' : 1,'value' : 4}]";
         //string itemStr = "[]";
         data.Add("pickItems", itemStr);
-        data.Add("getPush", "true");
-        helper.post(2, userUrl + "/?email=" + userData.email, data);
+        data.Add("getPush", "true");*/
+        helper.put(2, userUrl + "/?email=" + userData.email, data);
     }
 
     public void GetUser()
@@ -106,14 +144,58 @@ public class Test : MonoBehaviour {
         helper.get(1, userUrl + "/?box=true");
     }
 
+    enum LogCmd
+    {
+        firstIncome = 1,
+        playGame,
+        getItem,
+        quitApp
+    };
+    LogCmd logCmd;
+
     public void InsertTimeLog()
     {
         Debug.Log("InsertTimeLog");
+        WWWHelper helper = WWWHelper.Instance;
+        helper.OnHttpRequest += OnHttpRequest;
+        LogData logData = new LogData();
+        logData.email = userData.email;
+        logData.logCmd = (int)LogCmd.firstIncome;
+        logData.getItemIdx = 0;
+        logData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        Debug.Log("date: " + logData.date);
+        IDictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("logCmd", "" + logData.logCmd);
+        data.Add("email", logData.email);
+        data.Add("date", logData.date);
+        helper.post(3, userUrl, data);
     }
 
     public void InsertGetItemLog()
     {
         Debug.Log("InsertGetItemLog");
+        GiftItem item = new GiftItem();
+        item.description = "4만원이다.";
+        item.index = 10001;
+        item.rangeStart = 1;
+        item.rangeEnd = 4000;
+        item.text = "4만원";
+        item.type = 1;
+        item.value = 4;
+        WWWHelper helper = WWWHelper.Instance;
+        helper.OnHttpRequest += OnHttpRequest;
+        LogData logData = new LogData();
+        logData.email = userData.email;
+        logData.logCmd = (int)LogCmd.getItem;
+        logData.getItemIdx = item.index;
+        logData.date = DateTime.Now.ToString("yyyy-MM-dd-HH-mm-ss");
+        Debug.Log("date: " + logData.date);
+        IDictionary<string, string> data = new Dictionary<string, string>();
+        data.Add("logCmd", "" + logData.logCmd);
+        data.Add("email", logData.email);
+        data.Add("date", logData.date);
+        //string itemStr = "[{'description' : '4만원이다.','index' : 10001,'rangeStart' : 1,'rangeEnd' : 4000,'text' : '4만원','type' : 1,'value' : 4}]";
+        helper.post(3, userUrl, data);
     }
 
     public void DeleteUser()
@@ -134,21 +216,34 @@ public class Test : MonoBehaviour {
         }
 
         JsonData json = JsonMapper.ToObject(www.text);
-        if (id == (int)LoadDataNum.item)
+        if (id == (int)LoadDataNum.item) // 박스 데이터 정보 얻기
         {
-           
+            if (json["results"].Count == 0)
+            {
+                Debug.Log("box item data not found");
+            }
+            else
+            {
+                JsonData data = json["results"];
+                for (int i = 0; i < data.Count; i++)
+                {
+                    GameManager.GiftList.Add(JsonMapper.ToObject<GiftItem>(data[i].ToString()));
+                }
+                GiftItem it = (GiftItem)GameManager.GiftList[0];
+                Debug.Log("gift text: " + it.text);
+            }
         }
         else if (id == (int)LoadDataNum.user)
         {
             Debug.Log("user aaa");
             try
             {
-                if (json["results"].Count == 0)
+                if (json["results"].Count == 0) // 없는 경우 새로 추가
                 {
-                    Debug.Log("email get go");
-                    JsonData items = json["results"];
+                    Debug.Log("result count 0 insert new user");
+                    InsertNewUser();
                 }
-                else
+                else // 유저 데이터가 있는 경우 적용
                 {
                     JsonData data = json["results"];
                     userData.money = Int32.Parse(data[0]["money"].ToString());
@@ -174,6 +269,10 @@ public class Test : MonoBehaviour {
             {
                 Debug.Log("keynotfoundexp");
             }
+        }
+        else if (id == (int)LoadDataNum.log)
+        {
+
         }
     }
 }

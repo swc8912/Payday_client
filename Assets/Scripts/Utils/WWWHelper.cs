@@ -68,7 +68,7 @@ public class WWWHelper : MonoBehaviour {
         //StartCoroutine(WaitForRequest(id, www));
     }
 
-    public void put(int id, string url)
+    public void put(int id, string url, string data)
     {
         // PUT
         Debug.Log("put url: " + url);
@@ -76,7 +76,7 @@ public class WWWHelper : MonoBehaviour {
         httpWebRequest.ContentType = "application/json";
         httpWebRequest.Method = "PUT";
 
-        StartCoroutine(WaitForRequest2(id, httpWebRequest));
+        StartCoroutine(WaitForRequest2(id, httpWebRequest, data));
     }
 
     /** 통신 처리를 위한 코루틴 */
@@ -97,10 +97,16 @@ public class WWWHelper : MonoBehaviour {
         www.Dispose();
     }
 
-    private IEnumerator WaitForRequest2(int id, HttpWebRequest httpWebRequest)
+    private IEnumerator WaitForRequest2(int id, HttpWebRequest httpWebRequest, string data)
     {
+        using (var streamWriter = new StreamWriter(httpWebRequest.GetRequestStream()))
+        {
+            streamWriter.Write(data);
+        }
+
         HttpWebResponse httpResponse = (HttpWebResponse)httpWebRequest.GetResponse();
         yield return httpResponse;
+        
         string responseText = "";
         using (StreamReader streamReader = new StreamReader(httpResponse.GetResponseStream()))
         {

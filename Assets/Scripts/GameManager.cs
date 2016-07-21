@@ -9,7 +9,7 @@ using Facebook.Unity;
 
 public class GameManager : MonoBehaviour {
     public static bool debug = true;
-    public static ArrayList giftList = new ArrayList();
+    public static ArrayList GiftList = new ArrayList();
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private static string userUrl = "http://52.193.33.78:3000/payday";
     private const int MAXCHARGETIME = 10;
@@ -145,9 +145,9 @@ public class GameManager : MonoBehaviour {
             {
                 string str = items[i].ToJson();
                 GiftItem item = JsonMapper.ToObject<GiftItem>(str);
-                giftList.Add(item);
+                GiftList.Add(item);
             }
-            GiftItem gi2 = (GiftItem)giftList[0];
+            GiftItem gi2 = (GiftItem)GiftList[0];
             Debug.Log("after: " + gi2.description);
         }
         else if(id == (int)LoadDataNum.user)
