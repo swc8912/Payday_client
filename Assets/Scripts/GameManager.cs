@@ -168,14 +168,14 @@ public class GameManager : MonoBehaviour {
         WWWHelper helper = WWWHelper.Instance;
         string data = JsonMapper.ToJson(userData);
         Debug.Log("put data: " + data);
-        helper.put(2, userUrl + "/?email=" + userData.email, data);
+        helper.put(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did, data);
     }
 
     public void GetUser()
     {
         Debug.Log("GetUser");
         WWWHelper helper = WWWHelper.Instance;
-        helper.get(2, userUrl + "/?email=" + userData.email);
+        helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
     }
 
     public void GetBoxData()
@@ -291,11 +291,11 @@ public class GameManager : MonoBehaviour {
                     userData.heart = Int32.Parse(data["heart"].ToString());
                     userData.charge = Int32.Parse(data["charge"].ToString());
                     userData.currentBoxId = data["currentBoxId"].ToString();
-                    if (data["getPush"].ToString().Equals("true"))
+                    if (data["getPush"].ToString().ToLower().Equals("true"))
                         userData.getPush = true;
-                    else if (data["getPush"].ToString().Equals("false"))
+                    else if (data["getPush"].ToString().ToLower().Equals("false"))
                         userData.getPush = false;
-                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToString());
+                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToJson());
                     int cnt = items.Count;
                     userData.pickItems.Clear();
                     for (int i = 0; i < cnt; i++)
@@ -328,6 +328,7 @@ public class GameManager : MonoBehaviour {
         {
             //this.LastResponse = "Null Response\n";
             //LogView.AddLog(this.LastResponse);
+            Debug.Log("null res");
             return;
         }
 
@@ -339,12 +340,17 @@ public class GameManager : MonoBehaviour {
             //this.Status = "Error - Check log for details";
             //this.LastResponse = "Error Response:\n" + result.Error;
             //LogView.AddLog(result.Error);
+            Debug.Log("error: " + result.Error);
+            // 테스트용 피시유니티는 페북로그인이 안됨
+            WWWHelper helper = WWWHelper.Instance;
+            helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
         }
         else if (result.Cancelled)
         {
             //this.Status = "Cancelled - Check log for details";
             //this.LastResponse = "Cancelled Response:\n" + result.RawResult;
             //LogView.AddLog(result.RawResult);
+            Debug.Log("Cancelled Response:\n" + result.RawResult);
         }
         else if (!string.IsNullOrEmpty(result.RawResult))
         {
@@ -360,7 +366,7 @@ public class GameManager : MonoBehaviour {
                     Debug.Log("fb result email: " + email);
                     GameManager.userData.email = email;
                     WWWHelper helper = WWWHelper.Instance;
-                    helper.get(2, userUrl + "/?email=" + userData.email);
+                    helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
                     // 처음 앱 킨 로그 전송
                     GameManager.InsertTimeLog((int)LogCmd.firstIncome, 0);
                 }
@@ -374,6 +380,7 @@ public class GameManager : MonoBehaviour {
         {
             //this.LastResponse = "Empty Response\n";
             //LogView.AddLog(this.LastResponse);
+            Debug.Log("Empty Response");
         }
     }
 
@@ -401,7 +408,9 @@ public class GameManager : MonoBehaviour {
                 moneyStr = "현금: " + userData.money / 10000 + "억 " + userData.money % 10000 + "만원";
             cashText.text = moneyStr;
         }
-
+        userData.pickItems.Add(item);
+        // 갱신 유저 데이터 서버로 업데이트
+        UpdateUser();
         // 뽑은 내용 json으로 만들어서 로그 전송
         InsertGetItemLog(item);
     }
