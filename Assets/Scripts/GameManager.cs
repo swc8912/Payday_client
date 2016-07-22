@@ -13,7 +13,7 @@ public class GameManager : MonoBehaviour {
     private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private static string userUrl = "http://52.193.33.78:3000/payday";
     //private string userUrl = "http://localhost:3000/payday";
-    private const int MAXCHARGETIME = 10;
+    public const int MAXCHARGETIME = 10;
     private const int MAXREGENHEART = 3;
     private const int MAXBOXNUMBER = 10;
     enum LoadDataNum {
@@ -37,6 +37,7 @@ public class GameManager : MonoBehaviour {
     public Button upgradeBtn;
     public Button settingBtn;
     public Button shareBtn;
+    public Button adsBtn;
     public Text msgText;
     public Text cashText;
     public Text rankText;
@@ -102,6 +103,7 @@ public class GameManager : MonoBehaviour {
         giftBox.gameObject.SetActive(true);
         heartText.gameObject.SetActive(true);
         shareBtn.gameObject.SetActive(false);
+        adsBtn.gameObject.SetActive(false);
         spriteRenderer.sprite = giftSprites[0];
         //upgradeBtn.gameObject.SetActive(true);
         //settingBtn.gameObject.SetActive(true);
@@ -137,7 +139,6 @@ public class GameManager : MonoBehaviour {
     private void SetVisibleUserdata()
     {
         rankText.text = "직급: " + userData.rank;
-        //userData.money = 20240;
         string moneyStr = "현금: " + userData.money + "만원";
         if (userData.money >= 10000)
             moneyStr = "현금: " + userData.money / 10000 + "억 " + userData.money % 10000 + "만원";
@@ -145,6 +146,12 @@ public class GameManager : MonoBehaviour {
         timerText.text = userData.charge.ToString();
         heartText.text = "X " + userData.heart;
         StartCoroutine("HeartTimer");
+    }
+
+    public void SetVisibleHeart()
+    {
+        timerText.text = userData.charge.ToString();
+        heartText.text = "X " + userData.heart;
     }
 
     public void InsertNewUser()
@@ -418,6 +425,7 @@ public class GameManager : MonoBehaviour {
         msgBtn.gameObject.SetActive(true);
         nextBtn.gameObject.SetActive(false);
         giftBox.gameObject.SetActive(false);
+        adsBtn.gameObject.SetActive(true);
         string script = "남아있는 월급 상자가 없다..";
         msgBox.PrintScript(script);
     }
