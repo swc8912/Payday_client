@@ -8,7 +8,7 @@ public class GoNextScene : MonoBehaviour {
     public void onClick()
     {
 #if UNITY_IOS || UNITY_ANDROID || UNITY_WP8
-        FacebookUnity.initFB();
+        FacebookUnity.InitFB();
         Debug.Log("initfb");
 #endif
 #if UNITY_EDITOR

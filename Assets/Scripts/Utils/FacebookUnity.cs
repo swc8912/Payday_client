@@ -8,13 +8,13 @@ using UnityEngine.SceneManagement;
 using LitJson;
 
 public static class FacebookUnity {
-    public static void initFB()
+    public static void InitFB()
     {
         FB.Init(OnInitComplete, OnHideUnity);
         //this.Status = "FB.Init() called with " + FB.AppId;
     }
 
-    public static void loginFB()
+    public static void LoginFB()
     {
         CallFBLogin();
         //this.Status = "Login called";
@@ -27,10 +27,40 @@ public static class FacebookUnity {
     }
 #endif
 
-    public static void getUserDataFB()
+    public static void GetUserDataFB()
     {
         FB.API("/me?fields=id,email", HttpMethod.GET, GameManager.HandleResult);
     }
+
+    public static void FeedShare()
+    {
+        /*
+         * FB.FeedShare(
+          link: "https://example.com/myapp/?storyID=thelarch",
+          linkName: "The Larch",
+          linkCaption: "I thought up a witty tagline about larches",
+          linkDescription: "There are a lot of larch trees around here, aren't there?",
+          picture: "https://example.com/myapp/assets/1/larch.jpg",
+          callback: FeedCallback
+        );
+         */
+        FB.FeedShare(
+            string.Empty, //toId
+            new System.Uri("http://www.google.com"), //link
+            "LinkName", //linkName
+            "LinkCaption", //linkCaption
+            "LinkDescription", //linkDescription
+            null, //picture  new System.Uri("https://enterimagehere.com")
+            string.Empty, //mediaSource
+            LogCallback //callback
+        );
+    }
+
+    private static void LogCallback(IResult response)
+    {
+        Debug.Log("feedshare Worked");
+    }
+
 /*
     protected override void GetGui()
     {
@@ -144,7 +174,7 @@ public static class FacebookUnity {
         //    FB.IsInitialized);
         //LogView.AddLog(logMessage);
         if (!FB.IsLoggedIn)
-            loginFB();
+            LoginFB();
         else
             SceneManager.LoadScene("IntroScene");
     }

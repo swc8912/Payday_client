@@ -40,4 +40,10 @@ public class OpenBox : MonoBehaviour {
 
         gm.SetGiftResult(rightItem);
     }
+
+    public void onShareClick()
+    {
+        Debug.Log("onShareClick");
+        FacebookUnity.FeedShare();
+    }
 }

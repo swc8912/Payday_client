@@ -36,6 +36,7 @@ public class GameManager : MonoBehaviour {
     public Button msgBtn;
     public Button upgradeBtn;
     public Button settingBtn;
+    public Button shareBtn;
     public Text msgText;
     public Text cashText;
     public Text rankText;
@@ -100,6 +101,7 @@ public class GameManager : MonoBehaviour {
         rankText.gameObject.SetActive(true);
         giftBox.gameObject.SetActive(true);
         heartText.gameObject.SetActive(true);
+        shareBtn.gameObject.SetActive(false);
         spriteRenderer.sprite = giftSprites[0];
         //upgradeBtn.gameObject.SetActive(true);
         //settingBtn.gameObject.SetActive(true);
@@ -123,7 +125,7 @@ public class GameManager : MonoBehaviour {
         userData.getPush = true;
         userData.pickItems = new ArrayList();
 #if UNITY_IOS || UNITY_ANDROID
-        FacebookUnity.getUserDataFB();
+        FacebookUnity.GetUserDataFB();
 #endif
         WWWHelper helper = WWWHelper.Instance;
         helper.OnHttpRequest += OnHttpRequest;
@@ -209,14 +211,6 @@ public class GameManager : MonoBehaviour {
     public void InsertGetItemLog(GiftItem item)
     {
         Debug.Log("InsertGetItemLog");
-        /*GiftItem item = new GiftItem();
-        item.description = "4만원이다.";
-        item.index = 10001;
-        item.rangeStart = 1;
-        item.rangeEnd = 4000;
-        item.text = "4만원";
-        item.type = 1;
-        item.value = 4;*/
         WWWHelper helper = WWWHelper.Instance;
         GetItemData itemData = new GetItemData();
         itemData.email = userData.email;
@@ -394,6 +388,7 @@ public class GameManager : MonoBehaviour {
         // 대화상자 다시 나타내고 당첨 결과 출력
         nextBtn.gameObject.SetActive(false);
         msgBtn.gameObject.SetActive(true);
+        shareBtn.gameObject.SetActive(true);
         //upgradeBtn.gameObject.SetActive(false);
         //settingBtn.gameObject.SetActive(false);
         spriteRenderer.sprite = giftSprites[item.type];
