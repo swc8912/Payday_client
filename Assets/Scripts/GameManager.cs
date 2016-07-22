@@ -64,16 +64,6 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        rankText.text = "직급: " + userData.rank;
-        //userData.money = 20240;
-        string moneyStr = "현금: " + userData.money + "만원";
-        if (userData.money >= 10000)
-            moneyStr = "현금: " + userData.money / 10000 + "억 " + userData.money % 10000 + "만원";
-        cashText.text = moneyStr;
-        timerText.text = userData.charge.ToString();
-        heartText.text = "X " + userData.heart;
-        StartCoroutine("HeartTimer");
-
         nowTime = DateTime.UtcNow;
 	}
 	
@@ -128,7 +118,6 @@ public class GameManager : MonoBehaviour {
         userData.heart = MAXREGENHEART;
         userData.money = 0;
         userData.rank = "인턴";
-        //userData.uid = "init";
         userData.charge = MAXCHARGETIME;
         userData.currentBoxId = "1";
         userData.getPush = true;
@@ -141,6 +130,19 @@ public class GameManager : MonoBehaviour {
         helper.OnHttpRequest2 += OnHttpRequest2;
         // 아이템 데이터 로딩
         GetBoxData();
+    }
+
+    private void SetVisibleUserdata()
+    {
+        rankText.text = "직급: " + userData.rank;
+        //userData.money = 20240;
+        string moneyStr = "현금: " + userData.money + "만원";
+        if (userData.money >= 10000)
+            moneyStr = "현금: " + userData.money / 10000 + "억 " + userData.money % 10000 + "만원";
+        cashText.text = moneyStr;
+        timerText.text = userData.charge.ToString();
+        heartText.text = "X " + userData.heart;
+        StartCoroutine("HeartTimer");
     }
 
     public void InsertNewUser()
@@ -303,6 +305,7 @@ public class GameManager : MonoBehaviour {
                         userData.pickItems.Add(JsonMapper.ToObject<GiftItem>(items[i].ToJson()));
                     }
                     Debug.Log("get uesrdata end");
+                    SetVisibleUserdata();
                 }
             }
             catch (KeyNotFoundException e)
