@@ -11,7 +11,7 @@ public class AdsManager : MonoBehaviour {
  
     void Awake()
     {
-        Advertisement.Initialize("1094942", true);
+        Advertisement.Initialize("1094942", false);
         _ShowOpt.resultCallback = OnAdsShowResultCallBack;
         UpdateButton();
     }

@@ -10,9 +10,8 @@ using Facebook.Unity;
 public class GameManager : MonoBehaviour {
     public static bool debug = true;
     public static ArrayList[] GiftList = new ArrayList[MAXBOXNUMBER];
-    private string jsonUrl = "https://s3-ap-northeast-1.amazonaws.com/paydaybucket/data_utf8bom.json";
     private static string userUrl = "http://52.193.33.78:3000/payday";
-    //private string userUrl = "http://localhost:3000/payday";
+    //private static string userUrl = "http://localhost:3000/payday";
     public const int MAXCHARGETIME = 10;
     private const int MAXREGENHEART = 3;
     private const int MAXBOXNUMBER = 10;
@@ -298,7 +297,7 @@ public class GameManager : MonoBehaviour {
                         userData.getPush = true;
                     else if (data["getPush"].ToString().ToLower().Equals("false"))
                         userData.getPush = false;
-                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToJson());
+                    JsonData items = JsonMapper.ToObject(data["pickItems"].ToString());
                     int cnt = items.Count;
                     userData.pickItems.Clear();
                     for (int i = 0; i < cnt; i++)
@@ -345,9 +344,10 @@ public class GameManager : MonoBehaviour {
             //this.LastResponse = "Error Response:\n" + result.Error;
             //LogView.AddLog(result.Error);
             Debug.Log("error: " + result.Error);
-            // 테스트용 피시유니티는 페북로그인이 안됨
-            WWWHelper helper = WWWHelper.Instance;
-            helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
+            // 테스트용 피시유니티는 페북로그인이 안됨 릴리즈시에 주석처리하기
+            //Debug.Log("get user debug");
+            //WWWHelper helper = WWWHelper.Instance;
+            //helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
         }
         else if (result.Cancelled)
         {

@@ -44,6 +44,8 @@ public class OpenBox : MonoBehaviour {
     public void onShareClick()
     {
         Debug.Log("onShareClick");
-        FacebookUnity.FeedShare();
+        FacebookUnity.FeedShare(
+            (GiftItem)GameManager.userData.pickItems[GameManager.userData.pickItems.Count - 1]);
+        gm.shareBtn.gameObject.SetActive(false);
     }
 }

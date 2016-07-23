@@ -32,7 +32,7 @@ public static class FacebookUnity {
         FB.API("/me?fields=id,email", HttpMethod.GET, GameManager.HandleResult);
     }
 
-    public static void FeedShare()
+    public static void FeedShare(GiftItem item)
     {
         /*
          * FB.FeedShare(
@@ -46,11 +46,11 @@ public static class FacebookUnity {
          */
         FB.FeedShare(
             string.Empty, //toId
-            new System.Uri("http://www.google.com"), //link
-            "LinkName", //linkName
-            "LinkCaption", //linkCaption
-            "LinkDescription", //linkDescription
-            null, //picture  new System.Uri("https://enterimagehere.com")
+            new System.Uri("https://play.google.com/store/apps/details?id=kr.Celes.Payday"), //link
+            "오늘은 월급날", //linkName
+            item.description, //linkCaption
+            "월급상자에서 " + item.text + " 이(가) 나왔다!", //linkDescription
+            new System.Uri("https://s3-ap-northeast-1.amazonaws.com/paydaybucket/paydayico192.png"), //picture  null
             string.Empty, //mediaSource
             LogCallback //callback
         );
@@ -146,7 +146,7 @@ public static class FacebookUnity {
 
     private static void CallFBLogin()
     {
-        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, GameManager.HandleResult);
+        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends", "publish_actions" }, GameManager.HandleResult);
     }
 
     private static void CallFBLoginForPublish()
