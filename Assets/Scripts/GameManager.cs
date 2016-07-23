@@ -99,7 +99,7 @@ public class GameManager : MonoBehaviour {
         msgText.text = "";
         nextBtn.gameObject.SetActive(true);
         cashText.gameObject.SetActive(true);
-        rankText.gameObject.SetActive(true);
+        //rankText.gameObject.SetActive(true);
         giftBox.gameObject.SetActive(true);
         heartText.gameObject.SetActive(true);
         shareBtn.gameObject.SetActive(false);
@@ -435,13 +435,14 @@ public class GameManager : MonoBehaviour {
         if (userData.heart >= MAXREGENHEART)
         {
             userData.charge = MAXCHARGETIME;
+            timerText.gameObject.SetActive(false);
         }
         else if (userData.heart < MAXREGENHEART) // 하트가 2개 이하일때만 증가 
         {
+            timerText.gameObject.SetActive(true);
             if (userData.charge > 0)
             {
                 userData.charge--;
-                
             }
             else if (userData.charge == 0)
             {
@@ -449,7 +450,7 @@ public class GameManager : MonoBehaviour {
                 userData.charge = MAXCHARGETIME;
                 heartText.text = "X " + userData.heart;
             }
-            timerText.text = userData.charge.ToString();
+            timerText.text = userData.charge.ToString() + " 초 후 충전";
         }
         yield return new WaitForSeconds(1);
         StartCoroutine("HeartTimer");
