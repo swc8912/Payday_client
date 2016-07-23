@@ -176,7 +176,7 @@ public static class FacebookUnity {
         if (!FB.IsLoggedIn)
             LoginFB();
         else
-            SceneManager.LoadScene("IntroScene");
+            SceneManager.LoadScene("MainScene");
     }
 
     private static void OnHideUnity(bool isGameShown)

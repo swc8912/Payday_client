@@ -12,7 +12,7 @@ public class GoNextScene : MonoBehaviour {
         Debug.Log("initfb");
 #endif
 #if UNITY_EDITOR
-        SceneManager.LoadScene("IntroScene");
+        SceneManager.LoadScene("MainScene");
 #endif
     }
 }
