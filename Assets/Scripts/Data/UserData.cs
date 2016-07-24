@@ -12,5 +12,4 @@ public class UserData {
     public string currentBoxId { get; set; } // 상자 데이터
     public ArrayList pickItems { get; set; } // 뽑은 아이템들
     public bool getPush { get; set; } // 푸시 수신 여부
-
 }

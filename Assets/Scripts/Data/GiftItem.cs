@@ -4,14 +4,13 @@ using System.Collections;
 public class GiftItem {
     /*
      *  "description" : "4만원이다.",
-            "index" : 10001,
-            "rangeStart" : 1,
-            "rangeEnd" : 4000,
-            "text" : "4만원",
+     *      "index" : 10001,
+     *      "rangeStart" : 1,
+     *      "rangeEnd" : 4000,
+     *      "text" : "4만원",
      *      "type" : 1,
      *      "value" : 4
      */
-
     public string description { get; set; }
     public int index { get; set; }
     public int rangeStart { get; set; }

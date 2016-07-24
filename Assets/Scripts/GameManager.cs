@@ -21,7 +21,6 @@ public class GameManager : MonoBehaviour {
         user, // 유저 데이터
         log // 로그 데이터 전송
     };
-    LoadDataNum loadData;
     enum LogCmd
     {
         firstIncome = 1,
@@ -29,7 +28,6 @@ public class GameManager : MonoBehaviour {
         getItem,
         quitApp
     };
-    LogCmd logCmd;
     public static UserData userData = new UserData();
 
     public Button nextBtn;
