@@ -6,13 +6,14 @@ using System;
 using UnityEngine.UI;
 using System.Net;
 using Facebook.Unity;
+using UnityEngine.SceneManagement;
 
 public class GameManager : MonoBehaviour {
     public static bool debug = true;
     public static ArrayList[] GiftList = new ArrayList[MAXBOXNUMBER];
     private static string userUrl = "http://52.193.33.78:3000/payday";
     //private static string userUrl = "http://localhost:3000/payday";
-    public const int MAXCHARGETIME = 10;
+    public const int MAXCHARGETIME = 60;
     private const int MAXREGENHEART = 3;
     private const int MAXBOXNUMBER = 10;
     enum LoadDataNum {
@@ -65,7 +66,7 @@ public class GameManager : MonoBehaviour {
             return;
         }
 
-        nowTime = DateTime.UtcNow;
+        nowTime = DateTime.Now;
 	}
 	
 	// Update is called once per frame
@@ -75,8 +76,10 @@ public class GameManager : MonoBehaviour {
             if (Input.GetKey(KeyCode.Escape))
             {
                 // 앱 종료 로그 전송
-                quitTime = DateTime.UtcNow;
-                long playTime = (long)((quitTime - nowTime).Milliseconds) / 1000L;
+                quitTime = DateTime.Now;
+                Debug.Log("quitTime: " + quitTime.Millisecond);
+                Debug.Log("nowTime: " + nowTime.Millisecond);
+                int playTime = (quitTime - nowTime).Milliseconds;
                 Debug.Log("playTime: " + playTime);
                 InsertTimeLog((int)LogCmd.quitApp, 0);
                 InsertTimeLog((int)LogCmd.playGame, playTime);
@@ -361,6 +364,11 @@ public class GameManager : MonoBehaviour {
             //this.Status = "Success - Check log for details";
             //this.LastResponse = "Success Response:\n" + result.RawResult;
             //LogView.AddLog(result.RawResult);
+            if (!result.RawResult.StartsWith("[") && !result.RawResult.StartsWith("{") && FB.IsLoggedIn)
+            {
+                SceneManager.LoadScene("MainScene");
+                return;
+            }
             JsonData json = JsonMapper.ToObject(result.RawResult);
             try // 페이스북에서 받은 이메일 정보로 유저 데이터 요청
             {
@@ -369,6 +377,7 @@ public class GameManager : MonoBehaviour {
                 {
                     Debug.Log("fb result email: " + email);
                     GameManager.userData.email = email;
+                    FacebookUnity.CallFBLoginForPublish();
                     WWWHelper helper = WWWHelper.Instance;
                     helper.get(2, userUrl + "/?email=" + userData.email + "&did=" + userData.did);
                     // 처음 앱 킨 로그 전송

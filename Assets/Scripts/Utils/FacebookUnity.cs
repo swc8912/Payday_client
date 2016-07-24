@@ -146,10 +146,10 @@ public static class FacebookUnity {
 
     private static void CallFBLogin()
     {
-        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends", "publish_actions" }, GameManager.HandleResult);
+        FB.LogInWithReadPermissions(new List<string>() { "public_profile", "email", "user_friends" }, GameManager.HandleResult);
     }
 
-    private static void CallFBLoginForPublish()
+    public static void CallFBLoginForPublish()
     {
         // It is generally good behavior to split asking for read and publish
         // permissions rather than ask for them all at once.
