@@ -6,3 +6,5 @@ SW Maestro 7기 신우철 개인과제 1번
 언어: C#
 
 사용 플러그인: Unity Ads, Facebook sdk, https://github.com/kobakei/unity-gcm, LitJson
+
+과제 보고서: https://drive.google.com/open?id=0B2bTyXoO581lcVNfdWRhLWIyd0U
